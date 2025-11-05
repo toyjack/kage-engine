@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAGE Engine ESM Browser Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: 20px auto;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    #svgOutput {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: #f5f5f5;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>KAGE Engine ESM Browser Example</h1>
+  <p>这个示例展示如何在浏览器中使用 KAGE Engine ESM 模块生成汉字。</p>
+
+  <button onclick="drawMincho()">绘制明朝体</button>
+  <button onclick="drawGothic()">绘制哥特体</button>
+  <button onclick="showSVG()">显示 SVG</button>
+
+  <canvas id="canvas" width="200" height="200"></canvas>
+
+  <div id="svgOutput"></div>
+
+  <script type="module">
+    import { Kage, Polygons } from '../src/index.js';
+
+    // Create KAGE instance
+    const kage = new Kage();
+    let polygons;
+
+    // Define stroke data (simple character "十")
+    kage.kBuhin.push("ten",
+      "1:0:0:20:100:180:100$1:0:0:100:20:100:180"
+    );
+
+    // Also define a more complex character
+    kage.kBuhin.push("u6f22",
+      "99:150:0:9:12:73:200:u6c35-07:0:-10:50$99:0:0:54:10:190:199:u26c29-07"
+    );
+    kage.kBuhin.push("u6c35-07",
+      "2:7:8:42:12:99:23:124:35$2:7:8:20:62:75:71:97:85"
+    );
+    kage.kBuhin.push("u26c29-07",
+      "1:0:0:18:29:187:29$1:0:0:73:10:73:48$1:12:13:44:59:44:87"
+    );
+
+    function drawToCanvas(charName) {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Clear canvas
+      ctx.clearRect(0, 0, 200, 200);
+
+      // Generate glyph
+      polygons = new Polygons();
+      kage.makeGlyph(polygons, charName);
+
+      // Draw polygons to canvas
+      ctx.fillStyle = 'rgb(0, 0, 0)';
+      for(let i = 0; i < polygons.array.length; i++){
+        ctx.beginPath();
+        ctx.moveTo(polygons.array[i].array[0].x, polygons.array[i].array[0].y);
+        for(let j = 1; j < polygons.array[i].array.length; j++){
+          ctx.lineTo(polygons.array[i].array[j].x, polygons.array[i].array[j].y);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    window.drawMincho = function() {
+      kage.kShotai = kage.kMincho;
+      drawToCanvas("ten");
+      document.getElementById('svgOutput').innerHTML = '<p>已绘制明朝体</p>';
+    };
+
+    window.drawGothic = function() {
+      kage.kShotai = kage.kGothic;
+      drawToCanvas("ten");
+      document.getElementById('svgOutput').innerHTML = '<p>已绘制哥特体</p>';
+    };
+
+    window.showSVG = function() {
+      if (polygons) {
+        const svg = polygons.generateSVG(false);
+        document.getElementById('svgOutput').innerHTML =
+          '<h3>SVG Output:</h3><pre>' + svg.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+      }
+    };
+
+    // Draw initial character
+    drawMincho();
+  </script>
+</body>
+</html>

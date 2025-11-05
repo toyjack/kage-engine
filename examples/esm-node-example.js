@@ -1,0 +1,36 @@
+/**
+ * KAGE Engine ESM Example for Node.js
+ *
+ * Run with: node examples/esm-node-example.js
+ */
+
+import { Kage, Polygons } from '../src/index.js';
+
+// Create KAGE instance
+const kage = new Kage();
+const polygons = new Polygons();
+
+// Define stroke data for the character "漢" (Han/Kan)
+kage.kBuhin.push("u6c35-07",
+  "2:7:8:42:12:99:23:124:35$2:7:8:20:62:75:71:97:85$2:7:8:12:123:90:151:81:188$2:2:7:63:144:109:118:188:51"
+);
+
+kage.kBuhin.push("u26c29-07",
+  "1:0:0:18:29:187:29$1:0:0:73:10:73:48$1:0:0:132:10:132:48$1:12:13:44:59:44:87$1:2:2:44:59:163:59$1:22:23:163:59:163:87$1:2:2:44:87:163:87$1:0:0:32:116:176:116$1:0:0:21:137:190:137$7:32:7:102:59:102:123:102:176:10:190$2:7:0:105:137:126:169:181:182"
+);
+
+kage.kBuhin.push("u6f22",
+  "99:150:0:9:12:73:200:u6c35-07:0:-10:50$99:0:0:54:10:190:199:u26c29-07"
+);
+
+// Generate glyph
+kage.makeGlyph(polygons, "u6f22");
+
+// Output SVG
+const svg = polygons.generateSVG(false);
+console.log(svg);
+
+// Or save to file
+import { writeFileSync } from 'fs';
+writeFileSync('output.svg', svg);
+console.log('\nSVG saved to output.svg');

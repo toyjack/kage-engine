@@ -1,0 +1,46 @@
+{
+  "name": "kage-engine",
+  "version": "1.0.0",
+  "description": "KAGE (Kanji Automatic Generation Engine) - A JavaScript library for generating kanji glyphs from stroke data",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./kage": "./src/kage.js",
+    "./polygons": "./src/polygons.js",
+    "./polygon": "./src/polygon.js",
+    "./buhin": "./src/buhin.js",
+    "./2d": "./src/2d.js",
+    "./curve": "./src/curve.js",
+    "./kagecd": "./src/kagecd.js",
+    "./kagedf": "./src/kagedf.js"
+  },
+  "files": [
+    "src/**/*.js",
+    "README.md",
+    "COPYING"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "kanji",
+    "glyph",
+    "font",
+    "japanese",
+    "cjk",
+    "svg",
+    "canvas",
+    "vector",
+    "graphics"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toyjack/kage-engine.git"
+  }
+}
